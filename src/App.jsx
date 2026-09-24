@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Planeta from "./Planeta";
+import Bitacora from "./Bitacora";
 
 function App() {
   const [distancia, setDistancia] = useState(0);
@@ -47,6 +48,8 @@ function App() {
       {planetasVisitados.map((planeta, index) => (
         <Planeta key={index} nombre={planeta} />
       ))}
+
+      <Bitacora />
     </div>
   );
 }
