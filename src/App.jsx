@@ -1,122 +1,54 @@
-import { useState, useEffect, useMemo  } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React, { useState, useEffect, useMemo } from "react";
+import Planeta from "./Planeta";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [distancia, setDistancia] = useState(0);
+  const [combustible, setCombustible] = useState(100);
+  const [estadoNave, setEstadoNave] = useState("En órbita");
+  const [planetasVisitados, setPlanetasVisitados] = useState([]);
+
+  useEffect(() => {
+    console.log("¡El panel de control está listo!");
+
+    const intervalo = setInterval(() => {
+      setDistancia((d) => d + 10);
+      setCombustible((c) => (c > 0 ? c - 1 : 0));
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalo);
+      console.log("El panel de control se ha apagado.");
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log("¡Combustible actualizado!");
+  }, [combustible]);
+
+  const mensajeEstado = useMemo(() => {
+    return `Estado actual: ${estadoNave}`;
+  }, [estadoNave]);
+
+  const aterrizar = () => {
+    setEstadoNave("Aterrizando");
+    const nuevoPlaneta = `Planeta-${planetasVisitados.length + 1}`;
+    setPlanetasVisitados([...planetasVisitados, nuevoPlaneta]);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div style={{ fontFamily: "Arial", maxWidth: "600px", margin: "auto" }}>
+      <h1>Panel de Control</h1>
+      <p>Distancia: {distancia} km</p>
+      <p>Combustible: {combustible}%</p>
+      <p>{mensajeEstado}</p>
+      <button onClick={aterrizar}>Aterrizar</button>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <h2> Planetas Visitados</h2>
+      {planetasVisitados.map((planeta, index) => (
+        <Planeta key={index} nombre={planeta} />
+      ))}
+    </div>
+  );
 }
 
-export default App
+export default App;
